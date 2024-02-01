@@ -4,6 +4,7 @@ const regex = /[0-9]{2}:[0-9]{2}/g
 
 export const restauranteSchema = z.object({
   id: z.number().optional(),
+  nome: z.string(),
   foto: z.string(),
   endereco: z.string(),
   horarioFuncionamento: z.object({

@@ -14,7 +14,7 @@ async function main (): Promise<void> {
 
 main()
   .then(() => {
-    console.log('Servidor rodando em ' + process.env.PORT)
+    console.log(`Servidor rodando em http://localhost:${process.env.PORT}/api`)
   })
   .catch((err) => {
     console.error(err)

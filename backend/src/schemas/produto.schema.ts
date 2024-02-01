@@ -3,8 +3,9 @@ import { z } from 'zod'
 const regex = /[0-9]{2}:[0-9]{2}/g
 
 export const produtoSchema = z.object({
-  foto: z.string().optional(),
+  id: z.number().optional(),
   nome: z.string(),
+  foto: z.string().optional(),
   preco: z.number(),
   categoria: z.string(),
   promocao: z.object({
