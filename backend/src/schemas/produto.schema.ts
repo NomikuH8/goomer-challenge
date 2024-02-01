@@ -43,3 +43,5 @@ export const produtoSchema = z.object({
     })
   }).optional()
 })
+
+export type ProdutoType = z.infer<typeof produtoSchema>

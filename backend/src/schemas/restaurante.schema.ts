@@ -38,3 +38,5 @@ export const restauranteSchema = z.object({
     })
   })
 })
+
+export type RestauranteType = z.infer<typeof restauranteSchema>
