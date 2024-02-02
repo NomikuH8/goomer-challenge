@@ -4,7 +4,7 @@ import { RowList } from 'postgres'
 import { db } from '../database/connection'
 
 type ProdutoType = typeof produtoTable.$inferSelect
-type ProdutoInsertType = typeof produtoTable.$inferSelect
+type ProdutoInsertType = typeof produtoTable.$inferInsert
 
 export class ProdutoModel {
   async getAllFromRestaurante (restauranteId: number): Promise<RowList<ProdutoType[]>> {
@@ -17,7 +17,14 @@ export class ProdutoModel {
     return await db.execute(select)
   }
 
-  insertProduto () {
+  insertProduto (produto: ProdutoInsertType): Promise<RowList<ProdutoType[]>> {
+    const insert = sql `
+      INSERT INTO ${produtoTable} (
+        ${produtoTable.restauranteId},
+      ) VALUES (
+        ${produto.restauranteId}
+      )
+    `
   }
 
   updateProduto () {

@@ -7,7 +7,7 @@ export const produtoTable = pgTable('produto', {
   foto: text('foto'),
   dataCriacao: timestamp('data_criacao', { withTimezone: true }).defaultNow(),
   preco: decimal('preco', { precision: 2 }),
-  restauranteId: integer('restaurante_id').references(() => restauranteTable.id)
+  restauranteId: integer('restaurante_id').references(() => restauranteTable.id),
   categoriaId: integer('categoria_id').references(() => categoriaTable.id)
 })
 
