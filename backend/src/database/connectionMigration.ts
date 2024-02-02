@@ -1,5 +1,5 @@
-import postgres from 'postgres'
 import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 
 export const dbInfo = {
   host: process.env.DB_HOST ?? 'localhost',
@@ -9,5 +9,9 @@ export const dbInfo = {
   database: process.env.DB_NAME ?? 'goomer'
 }
 
-const client = postgres({ ...dbInfo })
-export const db = drizzle(client)
+const migrationClient = postgres({
+  ...dbInfo,
+  max: 1
+})
+
+export const dbMigrate = drizzle(migrationClient)

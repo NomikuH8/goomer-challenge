@@ -1,7 +1,7 @@
-import { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { sql } from 'drizzle-orm'
 import { restauranteHorarioTable, restauranteTable } from '../database/schemas/restaurante'
 import { RowList } from 'postgres'
+import { db } from '../database/connection'
 
 type RestauranteType = typeof restauranteTable.$inferSelect
 type RestauranteInsertType = typeof restauranteTable.$inferInsert
@@ -9,23 +9,17 @@ type HorarioType = typeof restauranteHorarioTable.$inferSelect
 type HorarioInsertType = typeof restauranteHorarioTable.$inferInsert
 
 export class RestauranteModel {
-  db: PostgresJsDatabase
-
-  constructor (db: PostgresJsDatabase) {
-    this.db = db
-  }
-
   async getAll (): Promise<RowList<RestauranteType[]>> {
     const select = sql`SELECT * FROM ${restauranteTable}`
 
-    const restaurantes = await this.db.execute<RestauranteType>(select)
+    const restaurantes = await db.execute<RestauranteType>(select)
     return restaurantes
   }
 
   async getAllHorario (): Promise<RowList<HorarioType[]>> {
     const select = sql`SELECT * FROM ${restauranteHorarioTable}`
 
-    const horarios = await this.db.execute<HorarioType>(select)
+    const horarios = await db.execute<HorarioType>(select)
     return horarios
   }
 
@@ -36,7 +30,7 @@ export class RestauranteModel {
       WHERE ${restauranteTable.id} = ${restauranteId}
     `
 
-    const restaurante = await this.db.execute<RestauranteType>(select)
+    const restaurante = await db.execute<RestauranteType>(select)
     return restaurante
   }
 
@@ -47,7 +41,7 @@ export class RestauranteModel {
       WHERE ${restauranteHorarioTable.restauranteId} = ${restauranteId}
     `
 
-    const horarios = await this.db.execute<HorarioType>(select)
+    const horarios = await db.execute<HorarioType>(select)
     return horarios
   }
 
@@ -64,7 +58,7 @@ export class RestauranteModel {
       ) RETURNING *
     `
 
-    const newRestaurante = await this.db.execute<RestauranteType>(insert)
+    const newRestaurante = await db.execute<RestauranteType>(insert)
     return newRestaurante
   }
 
@@ -89,7 +83,7 @@ export class RestauranteModel {
 
     insert.append(sql` RETURNING *`)
 
-    const newHorarios = await this.db.execute<HorarioType>(insert)
+    const newHorarios = await db.execute<HorarioType>(insert)
     return newHorarios
   }
 
@@ -104,7 +98,7 @@ export class RestauranteModel {
       RETURNING *
     `
 
-    const updatedRestaurante = await this.db.execute<RestauranteType>(update)
+    const updatedRestaurante = await db.execute<RestauranteType>(update)
     return updatedRestaurante
   }
 
@@ -119,7 +113,25 @@ export class RestauranteModel {
       RETURNING *
     `
 
-    const updatedHorario = await this.db.execute<HorarioType>(update)
+    const updatedHorario = await db.execute<HorarioType>(update)
     return updatedHorario
+  }
+
+  async deleteRestaurante (restauranteId: number): Promise<void> {
+    const deleteQuery = sql`
+      DELETE FROM ${restauranteTable}
+      WHERE ${restauranteTable.id} = ${restauranteId}
+    `
+
+    await db.execute(deleteQuery)
+  }
+
+  async deleteMultipleRestauranteHorarios (restauranteId: number): Promise<void> {
+    const deleteQuery = sql`
+      DELETE FROM ${restauranteHorarioTable}
+      WHERE ${restauranteHorarioTable.restauranteId} = ${restauranteId}
+    `
+
+    await db.execute(deleteQuery)
   }
 }

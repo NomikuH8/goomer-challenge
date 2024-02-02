@@ -1,13 +1,10 @@
 import { resolve } from 'path'
-import { getMigrationClient } from '../database/connection'
-import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
+import { dbMigrate } from '../database/connectionMigration'
 
 async function main (): Promise<void> {
-  const client = await getMigrationClient()
-  const db = drizzle(client)
+  const db = dbMigrate
   await migrate(db, { migrationsFolder: resolve(__dirname, '..', '..', 'migrations') })
-  await client.end()
 }
 
 main()
