@@ -23,15 +23,19 @@ export class ProdutoModel {
     const insert = sql`
       INSERT INTO ${produtoTable} (
         ${produtoTable.restauranteId},
+        ${produtoTable.foto},
+        ${produtoTable.preco}
       ) VALUES (
-        ${produto.restauranteId}
+        ${produto.restauranteId},
+        ${produto.foto},
+        ${produto.preco}
       )
     `
 
     return await db.execute(insert)
   }
 
-  async insertMultiplePromocionalHorarios (restauranteId: number, horarios: HorarioInsertType[]): Promise<RowList<HorarioType[]>> {
+  async insertMultiplePromocionalHorarios (produtoId: number, horarios: HorarioInsertType[]): Promise<RowList<HorarioType[]>> {
     const insert = sql`
       INSERT INTO ${produtoPromocaoHorarioTable} (
         ${produtoPromocaoHorarioTable.produtoId},
@@ -42,7 +46,7 @@ export class ProdutoModel {
     `
 
     for (const horario of horarios) {
-      insert.append(sql` (${restauranteId}, ${horario.diaSemana}, ${horario.de}, ${horario.ate})`)
+      insert.append(sql` (${produtoId}, ${horario.diaSemana}, ${horario.de}, ${horario.ate})`)
 
       const index = horarios.findIndex((val) => val.diaSemana === horario.diaSemana)
       if (index < horarios.length - 1) {
